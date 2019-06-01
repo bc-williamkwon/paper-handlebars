@@ -7,6 +7,8 @@ const Lab = require('lab'),
 describe('third party handlebars-helpers', function() {
     const context = {
         array: [1, 2, 3, 4, 5],
+        str: '12345',
+        obj : {a: 1, b: 2, c: 3},
         options: { a: { b: { c: 'd' } } }
     };
 
@@ -56,7 +58,7 @@ describe('third party handlebars-helpers', function() {
     describe('comparison helpers', function() {
 
         describe('contains helper', function() {
-            it('renders the contains block if it evaluates to true', function(done) {
+            it('renders the contains block for an array if it evaluates to true', function(done) {
                 runTestCases([
                     {
                         input: `{{#contains array 1}}This will be rendered.{{else}}This will not be rendered.{{/contains}}`,
@@ -65,10 +67,46 @@ describe('third party handlebars-helpers', function() {
                 ], done);
             });
 
-            it('renders the else block if it evaluates to false', function(done) {
+            it('renders the contains block for a string if it evaluates to true', function(done) {
+                runTestCases([
+                    {
+                        input: `{{#contains str 1}}This will be rendered.{{else}}This will not be rendered.{{/contains}}`,
+                        output: 'This will be rendered.',
+                    },
+                ], done);
+            });
+
+            it('renders the contains block for an object if it evaluates to true', function(done) {
+                runTestCases([
+                    {
+                        input: `{{#contains obj 1}}This will be rendered.{{else}}This will not be rendered.{{/contains}}`,
+                        output: 'This will be rendered.',
+                    },
+                ], done);
+            });
+
+            it('renders the else block for an array if it evaluates to false', function(done) {
                 runTestCases([
                     {
                         input: `{{#contains array '1'}}This will not be rendered.{{else}}This will be rendered.{{/contains}}`,
+                        output: 'This will be rendered.',
+                    },
+                ], done);
+            });
+
+            it('renders the else block for a string if it evaluates to false', function(done) {
+                runTestCases([
+                    {
+                        input: `{{#contains str '7'}}This will not be rendered.{{else}}This will be rendered.{{/contains}}`,
+                        output: 'This will be rendered.',
+                    },
+                ], done);
+            });
+
+            it('renders the else block for an object if it evaluates to false', function(done) {
+                runTestCases([
+                    {
+                        input: `{{#contains obj '8'}}This will not be rendered.{{else}}This will be rendered.{{/contains}}`,
                         output: 'This will be rendered.',
                     },
                 ], done);

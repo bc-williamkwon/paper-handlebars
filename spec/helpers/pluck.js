@@ -7,9 +7,13 @@ const Lab = require('lab'),
 describe('pluck helper', function() {
     const context = {
         users: [
-          { 'user': 'barney', 'age': 36 },
-          { 'user': 'fred',   'age': 40 }
-        ]
+          { 'user': 'barney', 'age': 36},
+          { 'user': 'fred', 'age': 40}
+        ],
+        usersObj: {
+            a : { 'user': {name: 'barney', age: 36 }},
+            b: { 'user': {name: 'fred', age: 40}}
+        }
     };
 
     const runTestCases = testRunner({context});
@@ -22,6 +26,18 @@ describe('pluck helper', function() {
             },
             {
                 input: '{{#each (pluck users "user")}}hello {{this}} {{/each}}',
+                output: 'hello barney hello fred ',
+            },
+        ], done);
+    });
+    it('should get the values from all elements in collection', function(done) {
+        runTestCases([
+            {
+                input: '{{pluck usersObj "user.age"}}',
+                output: '36,40',
+            },
+            {
+                input: '{{#each (pluck usersObj "user.name")}}hello {{this}} {{/each}}',
                 output: 'hello barney hello fred ',
             },
         ], done);

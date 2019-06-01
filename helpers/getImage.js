@@ -1,6 +1,5 @@
 'use strict';
-
-var _ = require('lodash');
+const common = require('./lib/common.js');
 
 const factory = globals => {
     return function(image, presetName, defaultImageUrl) {
@@ -11,13 +10,13 @@ const factory = globals => {
         var width;
         var height;
 
-        if (!_.isPlainObject(image) || !_.isString(image.data) || image.data.indexOf('{:size}') === -1) {
+        if (!common.isObject(image) || !common.isString(image.data) || image.data.indexOf('{:size}') === -1) {
             // return empty string if not a valid image object
             defaultImageUrl = defaultImageUrl ? defaultImageUrl : '';
-            return _.isString(image) ? image : defaultImageUrl;
+            return common.isString(image) ? image : defaultImageUrl;
         }
 
-        if (_.isPlainObject(presets) && _.isPlainObject(presets[presetName])) {
+        if (common.isObject(presets) && common.isObject(presets[presetName])) {
             // If preset is one of the given presets in _images
             width = parseInt(presets[presetName].width, 10) || 4096;
             height = parseInt(presets[presetName].height, 10) || 4096;

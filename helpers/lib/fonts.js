@@ -18,35 +18,35 @@ const fontProviders = {
          * @returns {string}
          */
         parser: function(fonts) {
-            var collection = [],
-                familyHash = {};
+            const collection = [];
+            const familyHash = {};
 
-            _.each(fonts, function fontsIterator(font) {
-                var split = font.split('_'),
-                    familyKey = split[1],  // Eg: Open+Sans
-                    weights = split[2];    // Eg: 400,700italic
+            for (let i = 0; i < fonts.length; i++) {
+                const split = fonts[i].split('_');
+                const familyKey = split[1];
+                let weights = split[2];
 
-                if (_.isEmpty(familyKey)) {
-                    return;
+                if (!familyKey || !familyKey.length) {
+                   continue;
                 }
-
-                if (_.isUndefined(weights)) {
+                if (typeof weights === 'undefined') {
                     weights = '';
                 }
-
-                if (!_.isArray(familyHash[familyKey])) {
+                if (!Array.isArray(familyHash[familyKey])) {
                     familyHash[familyKey] = [];
                 }
-
                 weights = weights.split(',');
+                familyHash[familyKey].push(...weights);
+            }
 
-                familyHash[familyKey].push(weights);
-                familyHash[familyKey] = _.uniq(_.flatten(familyHash[familyKey]));
-            });
+            const familyHashKeys = Object.keys(familyHash);
 
-            _.each(familyHash, function fontHashIterator(weights, family) {
-                collection.push(family + ':' + weights.join(','));
-            });
+            for (let i = 0; i < familyHashKeys.length; i++) {
+                const family = familyHashKeys[i];
+                const weights = familyHash[family];
+                const uniqueWeights = Array.from(new Set(weights));
+                collection.push(`${family}:${uniqueWeights.join(',')}`);
+            }
 
             return collection;
         },
@@ -61,10 +61,16 @@ const fontProviders = {
             function replaceSpaces(font) {
                 return font.split('+').join(' ');
             }
-
+            function familyBuilder(fonts) {
+                const fontsCopy = fonts.slice();
+                for (let i = 0; i < fontsCopy.length; i++) {
+                    fontsCopy[i] = replaceSpaces(fontsCopy[i]);
+                }
+                return fontsCopy;
+            }
             return {
                 google: {
-                    families: _.map(fonts, replaceSpaces),
+                    families: familyBuilder(fonts),
                 }
             };
         },
