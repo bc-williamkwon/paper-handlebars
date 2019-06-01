@@ -1,7 +1,7 @@
 'use strict';
 
 const _ = require('lodash');
-
+const common = require('./lib/common.js');
 /**
  * Yield block if any object within a collection matches supplied predicate
  *
@@ -15,25 +15,18 @@ const factory = () => {
         const opts = args.pop();
         const predicate = opts.hash;
 
-        if (!_.isEmpty(predicate)) {
+        if (!common.isEmptyObject(predicate)) {
             // With options hash, we check the contents of first argument
             any = _.any(args[0], predicate);
         } else {
             // DEPRECATED: Moved to #or helper
             // Without options hash, we check all the arguments
-            any = _.any(args, function (arg) {
-                if (_.isArray(arg)) {
-                    return !!arg.length;
+            for (let i = 0; i < args.length; i++) {
+                any = common.isTruthy(args[i])
+                if (any) {
+                    break;
                 }
-                // If an empty object is passed, arg is false
-                else if (_.isEmpty(arg) && _.isObject(arg)) {
-                    return false;
-                }
-                // Everything else
-                else {
-                    return !!arg;
-                }
-            });
+            }
         }
 
         if (any) {
