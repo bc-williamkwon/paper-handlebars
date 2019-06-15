@@ -1,7 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
-
 const fontProviders = {
     'Google': {
         /**
@@ -90,18 +88,22 @@ const fontProviders = {
 module.exports = function(format, themeSettings, handlebars, options) {
 
     const collectedFonts = {};
-    _.each(themeSettings, function(value, key) {
+    const themeSettingsKeys = Object.keys(themeSettings);
+
+    for (let i = 0; i < themeSettingsKeys.length; i++) {
+        const key = themeSettingsKeys[i];
+        const value = themeSettings[key];
         //check that -font is on end of string but not start of string
         const fontKeySuffix = '-font';
         if (!key.endsWith(fontKeySuffix)) {
-            return;
+            continue;
         }
 
         const splits = value.split('_');
         const provider = splits[0];
 
         if (typeof fontProviders[provider] === 'undefined') {
-            return;
+            continue;
         }
 
         if (typeof collectedFonts[provider] === 'undefined') {
@@ -109,7 +111,7 @@ module.exports = function(format, themeSettings, handlebars, options) {
         }
 
         collectedFonts[provider].push(value);
-    });
+    }
 
     // Parse font strings based on provider
     const parsedFonts = {};

@@ -3,23 +3,21 @@
 const fs = require('fs');
 const Path = require('path');
 
-const helpers = [];
+let helpers = [];
 
 // Load helpers
-const notDeprecated = fs.readdirSync(Path.join(__dirname, 'helpers'));
+fs.readdirSync(Path.join(__dirname, 'helpers')).forEach(filename => {
+    if (!fs.lstatSync(Path.join(__dirname, 'helpers', filename)).isDirectory()) {
+        helpers = helpers.concat(require('./helpers/' + filename));
+    }
+});
 
-for (let i = 0; i < notDeprecated.length; i++) {
-    if (!fs.lstatSync(Path.join(__dirname, 'helpers', notDeprecated[i])).isDirectory()) {
-        helpers.push(...require('./helpers/' + notDeprecated[i]));
-    }
-}
-const deprecated = fs.readdirSync(Path.join(__dirname, 'helpers', 'deprecated'));
 // Load deprecated helpers
-for (let j = 0; j < deprecated.length; j++) {
-    if (!fs.lstatSync(Path.join(__dirname, 'helpers', 'deprecated', deprecated[j])).isDirectory()) {
-        helpers.push(...require('./helpers/deprecated/' + deprecated[j]));
+fs.readdirSync(Path.join(__dirname, 'helpers', 'deprecated')).forEach(filename => {
+    if (!fs.lstatSync(Path.join(__dirname, 'helpers', 'deprecated', filename)).isDirectory()) {
+        helpers = helpers.concat(require('./helpers/deprecated/' + filename));
     }
-}
+});
 
 // Export full list of helpers
 module.exports = helpers;
