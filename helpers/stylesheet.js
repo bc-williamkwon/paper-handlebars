@@ -4,11 +4,11 @@
 const buildCDNHelper = require('./lib/cdnify');
 
 const factory = globals => {
-    return function(assetPath, options) {
+    return function(assetPath) {
         const cdnify = buildCDNHelper(globals);
         const siteSettings = globals.getSiteSettings();
         const configId = siteSettings.theme_config_id;
-
+        const options = arguments[arguments.length - 1];
         // append the configId only if the asset path starts with assets/css/
         const path = configId && assetPath.match(/^\/?assets\/css\//)
             ? assetPath.replace(/\.css$/, `-${configId}.css`)

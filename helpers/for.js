@@ -3,18 +3,17 @@
 const common = require('./lib/common.js');
 
 const factory = () => {
-    return function(from, to, context, options) {
+    return function(from, to, context) {
+        const options = arguments[arguments.length - 1];
         const maxIterations = 100;
         let output = '';
 
         if (common.isOptions(to)) {
-            options = to;
             context = {};
             to = from;
             from = 1;
 
         } else if (common.isOptions(context)) {
-            options = context;
             if (common.isObject(to)) {
                 context = to;
                 to = from;

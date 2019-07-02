@@ -3,13 +3,11 @@
 const common = require('./lib/common.js');
 
 const factory = globals => {
-    return function(lvalue, operator, rvalue, options) {
+    return function(lvalue, operator, rvalue) {
         let result;
-
+        const options = arguments[arguments.length - 1];
         // Only parameter
         if (common.isOptions(operator)) {
-            // If an array is passed as the only parameter
-            options = operator;
             if (Array.isArray(lvalue)) {
                 result = !!lvalue.length;
             }
@@ -26,7 +24,6 @@ const factory = globals => {
             if (common.isOptions(rvalue)) {
                 // @TODO: this block is for backwards compatibility with 'compare' helper
                 // Remove after operator='==' is removed from stencil theme
-                options = rvalue;
                 rvalue = operator;
                 operator = options.hash.operator || "==";
             }

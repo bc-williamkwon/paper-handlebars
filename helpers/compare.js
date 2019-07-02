@@ -1,7 +1,9 @@
 'use strict';
 
 const factory = () => {
-    return function(lvalue, rvalue, options) {
+    return function(lvalue, rvalue) {
+
+        const options = arguments[arguments.length - 1];
         if (typeof options === 'undefined') {
             throw new Error("Handlerbars Helper 'compare' needs 2 parameters and a block.");
         }
